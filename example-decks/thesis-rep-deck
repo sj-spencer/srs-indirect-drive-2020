@@ -1,0 +1,156 @@
+simulation
+{
+	n0 = 1.0d20,
+}
+
+!--------the node configuration for this simulation--------
+node_conf 
+{
+	node_number(1:1) =  24,
+	if_periodic(1:1) =  .false.,
+	n_threads = 1,
+}
+
+
+!----------spatial grid----------
+grid 
+{
+	nx_p(1:1) =  6473,
+	coordinates = "cartesian",
+}
+
+
+!----------time step and global data dump timestep number----------
+time_step 
+{
+	dt     =   0.271e0,
+	ndump  =   10, 
+}
+
+restart
+{
+	ndump_fac = 50000,
+	if_restart=.false.,
+	if_remold=.true.,
+}
+
+
+!----------spatial limits of the simulations----------
+!(note that this includes information about
+		! the motion of the simulation box)
+space 
+{
+	xmin(1:1) =  0.000e0,
+	xmax(1:1) =  1790.10d0,
+	if_move(1:1) = .false.,
+}
+
+
+!----------time limits ----------
+time 
+{
+	tmin = 0.0e0, tmax  = 10733.0d0,
+}
+
+
+
+!----------boundary conditions for em-fields ----------
+emf_bound 
+{
+	type(1:2,1) =   'open', 'open',
+}
+
+diag_emf
+{
+	ndump_fac = 1,
+	reports = "e1","b2","e3","s1",
+	!ndump_fac_ave = 1,
+	!ndump_fac_ene_int = 1,
+	!n_ave(1:2) = 5, 5,
+	!reports= "e2, senv",
+}
+
+
+
+
+!----------number of particle species----------
+particles 
+{ 
+	num_species = 1, 
+	!  interpolation = "linear", 
+	interpolation = "quadratic", 
+	!interpolation = "cubic", 
+	!interpolation = "quartic", 
+
+	!ndump_fac = 1,
+	!reports = "charge",
+}
+
+
+!----------information for ELECTRONS----------
+species 
+{
+	name = "electrons",
+!	num_par_max = 100000000,
+	rqm = -1.0d0,
+	q_real = -1.0d0,
+	num_par_x(1:1) = 2048,
+	n_sort = 1,
+}
+
+udist
+{
+	uth(1:3) = 0.0938d0 , 0.0938d0 , 0.0938d0 ,
+	ufl(1:3) = 0.0d0 , 0.0d0 , 0.0d0 ,
+}
+
+profile
+{
+	profile_type = "math func",
+	math_func_expr = "0.138*exp(x1/8950)",
+}
+
+
+!----------boundary conditions for this species----------
+spe_bound 
+{
+	type(1:2,1) =   'thermal',  'thermal', 
+	uth_bnd(1:3,1,1) =  0.0938d0 , 0.0938d0 , 0.0938d0 , 
+	uth_bnd(1:3,2,1) =  0.0938d0 , 0.0938d0 , 0.0938d0 , 
+}
+
+diag_species 
+{
+	ndump_fac = 1,
+	ndump_fac_ene = 50,
+	ndump_fac_pha = 50,
+
+	ps_xmin(1:1) = 0.0,
+	ps_xmax(1:1) = 1790.0d0,
+	ps_nx(1:1)   = 6473,
+
+	ps_pmin(1:3) =  -1, -1, -1,
+	ps_pmax(1:3) =  1,  1,  1,
+	ps_np(1:3)   =   500, 500, 10,
+
+	if_ps_p_auto(1:3) = .true., .true., .true.,
+
+	phasespaces = "x1", "p2p1", "p1x1",
+}
+
+antenna_array
+{ 
+	n_antenna = 1,
+}
+
+antenna
+{
+	a0 = 0.0208d0, 
+	t_rise = 50.0d0,
+	t_flat = 100000.0d0,
+	t_fall = 100d0,
+	omega0 = 1.0d0,
+	ant_type = 1,
+	pol = 90.0d0,
+}
+
